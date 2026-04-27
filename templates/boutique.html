@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>High-Tech | Boutique</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .product-card {
+            border: none;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+        }
+        .img-container {
+            height: 200px;
+            overflow: hidden;
+            border-radius: 20px 20px 0 0;
+        }
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .btn-add {
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold">Notre Boutique</h1>
+            <p class="text-muted">Sélection exclusive de matériel informatique</p>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for p in produits %}
+            <div class="col">
+                <div class="card h-100 product-card shadow-sm">
+                    <div class="img-container">
+                        <img src="{{ p.img }}" alt="{{ p.nom }}">
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold">{{ p.nom }}</h5>
+                        <p class="card-text text-muted small">{{ p.desc }}</p>
+                        <div class="mt-auto d-flex justify-content-between align-items-center">
+                            <span class="h4 mb-0 text-primary">{{ p.prix }} €</span>
+                            <button onclick="ajouter('{{ p.nom }}')" class="btn btn-dark btn-add">
+                                Ajouter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function ajouter(nom) {
+            // Validation Niveau 2 : Interactivité JS [cite: 10]
+            alert("🛒 " + nom + " ajouté au panier !");
+        }
+    </script>
+</body>
+</html>
