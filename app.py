@@ -1,6 +1,19 @@
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost/site_commerce'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+class Produit(db.Model):
+    __tablename__ = 'produit'
+    id = db.Column(db.Integer, primary_key=True)
+    nom = db.Column(db.String(100), nullable=False)
+    prix = db.Column(db.Float, nullable=False)
+    image = db.Column(db.String(255))
 
 @app.route('/')
 def index():
@@ -8,32 +21,10 @@ def index():
 
 @app.route('/boutique')
 def boutique():
-    # Données riches pour un rendu professionnel
-    items = [
-        {
-            'id': 1,
-            'nom': 'Pack Setup Gaming', 
-            'prix': 1299, 
-            'desc': 'Le setup complet : PC, écran 144Hz et clavier méca.',
-            'img': 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=500'
-        },
-        {
-            'id': 2,
-            'nom': 'Casque Surround 7.1', 
-            'prix': 89, 
-            'desc': 'Immersion totale avec réduction de bruit active.',
-            'img': 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500'
-        },
-        {
-            'id': 3,
-            'nom': 'Souris Esport RGB', 
-            'prix': 55, 
-            'desc': 'Capteur 16000 DPI pour une précision chirurgicale.',
-            'img': 'https://images.unsplash.com/photo-1527698266440-12104e498b76?w=500'
-        }
-    ]
-    return render_template('boutique.html', produits=items)
+    tous_les_produits = Produit.query.all()
+    return render_template('boutique.html', produits=tous_les_produits)
 
 if __name__ == '__main__':
-    print("\n🚀 SERVEUR BOUTIQUE V2.0 LANCÉ")
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
